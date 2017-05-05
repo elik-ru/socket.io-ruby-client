@@ -118,9 +118,11 @@ class WebSocket
         end
         reply_digest = read(16)
         expected_digest = hixie_76_security_digest(key1, key2, key3)
-        if reply_digest != expected_digest
-          raise(WebSocket::Error,
-            "security digest doesn't match: %p != %p" % [reply_digest, expected_digest])
+        unless params[:insecure]
+          if reply_digest != expected_digest
+            raise(WebSocket::Error,
+              "security digest doesn't match: %p != %p" % [reply_digest, expected_digest])
+          end
         end
         @handshaked = true
 

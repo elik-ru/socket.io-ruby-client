@@ -48,6 +48,7 @@ module SocketIO
       @on_event = {}
       @path = options[:path]
       @end_point = options[:end_point]
+      @ws_options = options[:websocket] || {}
     end
 
     def start
@@ -62,7 +63,7 @@ module SocketIO
     def connect_transport
       if @supported_transports.include? "websocket"
         scheme = @uri.scheme == "https" ? "wss" : "ws"
-        @transport = WebSocket.new("#{scheme}://#{@uri.host}:#{@uri.port}/socket.io/1/websocket/#{@session_id}", origin: @uri.to_s)
+        @transport = WebSocket.new("#{scheme}://#{@uri.host}:#{@uri.port}/socket.io/1/websocket/#{@session_id}", @ws_options.merge(origin: @uri.to_s))
       else
         raise "We only support WebSockets.. and this server doesnt like web sockets.. O NO!!"
       end
